@@ -1,3 +1,7 @@
+# Git Specific ignores
+cookies.json
+
+
 # Logs
 logs
 *.log
