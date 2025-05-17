@@ -2,7 +2,7 @@ const { RequestError, VRChatAPI, VRCWebSocket, EventType } = require('vrc-ts');
 const _DISCORD = require("discord.js")
 
 console.log("start")
-const DiscordWebhook = _DISCORD.WebhookClient = new _DISCORD.WebhookClient({ url: "https://discord.com/api/webhooks/1033328149519405126/Vv5dg33YxrSSMG2SgnFu7rXsf9DsoVhue0nMQZMwWNukp8fGv5LAFO2n7x3mwpju5j8Z" })
+const DiscordWebhook = _DISCORD.WebhookClient = new _DISCORD.WebhookClient({ url: process.env.WEBHOOK_LINK})
 
 const api = new VRChatAPI({});
 main();
