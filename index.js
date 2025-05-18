@@ -57,7 +57,7 @@ async function main() {
         console.log(`------------------------------------------------`)
         console.log(data)
         try {
-            DiscordWebhook.send({ content: `${data.user.displayName} est deconnecte.` })
+            DiscordWebhook.send({ content: `${(api.userApi.getUserById({ userId: data.userId }))} est deconnecte.` })
         } catch (error) {
 
         }
