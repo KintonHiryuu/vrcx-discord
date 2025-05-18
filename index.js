@@ -14,7 +14,7 @@ async function main() {
     try {
         await api.login();
         // console.log(`Logged in successfully as ${api.currentUser.displayName}!`);
-        DiscordWebhook.send({ content: `Bot connecte` })
+        // DiscordWebhook.send({ content: `Bot connecte` })
 
     } catch (error) {
         if (error instanceof RequestError) {
@@ -28,7 +28,7 @@ async function main() {
         users.push(await (await (api.userApi.getUserById({ userId: user }))).displayName)
     }
     // console.log(`Tracked : \n - ${users.join("\n - ")}`)
-    DiscordWebhook.send({ content: `Amis du compte : \n \`\`\` - ${users.join("\n - ")}\`\`\`` })
+    // DiscordWebhook.send({ content: `Amis du compte : \n \`\`\` - ${users.join("\n - ")}\`\`\`` })
 
     const ws = new VRCWebSocket({
         vrchatAPI: api,
