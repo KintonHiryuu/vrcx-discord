@@ -29,7 +29,7 @@ VRC_WEBSOCKET.on(EventType.Friend_Online, (data) => {
             },
             {
                 "type": 10,
-                "content": `*Plateforme : ${emojis.platforme[data.platform]}* | *Status : ${emojis.status[data.status]}*`
+                "content": `*Plateforme : ${emojis.platforme[data.platform] || data.platform}* | *Status : ${emojis.status[data.status] || data.status}*`
             },
             {
                 "type": 14,

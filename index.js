@@ -19,17 +19,17 @@ async function main() {
         }
         process.exit(1)
     }
-    process.env.TEST ? console.log(`VRCClient online ${VRC_API.currentUser.username}`) : null;
+    process.env.TEST == true ? console.log(`VRCClient online ${VRC_API.currentUser.username}`) : null;
 
     const VRC_WEBSOCKET = new VRCWebSocket({
         vrchatAPI: VRC_API,
         eventsToListenTo: [EventType.Friend_Location, EventType.Friend_Offline, EventType.Friend_Online],
     });
-    process.env.TEST ? console.log(`VRCWebSocket OK`) : null;
+    process.env.TEST == true ? console.log(`VRCWebSocket OK`) : null;
 
 
     DISCORD_CLIENT.login(process.env.DISCORD_TOKEN).then((c) => {
-        process.env.TEST ? console.log(`DiscordClient Online : ${DISCORD_CLIENT.user.displayName}`) : null;
+        process.env.TEST == true ? console.log(`DiscordClient Online : ${DISCORD_CLIENT.user.displayName}`) : null;
     })
 
 
