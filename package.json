@@ -1,8 +1,6 @@
 {
   "dependencies": {
     "discord.js": "^14.19.3",
-    "vrc-ts": "^1.0.15",
-    "vrchat": "^1.19.1",
-    "vrchat-api-library": "^2.0.0"
+    "vrc-ts": "^1.0.15"
   }
 }

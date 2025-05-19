@@ -1,0 +1,13 @@
+{
+    "status":{
+        "join me":"Rejoins-moi",
+        "online":"En jeux",
+        "ask me":"Demande moi",
+        "dnd":"Ne pas deranger"
+    },
+    "platforme":{
+        "standalonewindows":"Windows",
+        "android":"Quest/Tel",
+        "IOS":"IOS"
+    }
+}

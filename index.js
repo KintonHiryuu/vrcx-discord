@@ -1,75 +1,42 @@
 const { RequestError, VRChatAPI, VRCWebSocket, EventType } = require('vrc-ts');
-const _DISCORD = require("discord.js")
+const DISCORD = require("discord.js")
 
-console.log("start")
-const DiscordWebhook = _DISCORD.WebhookClient = new _DISCORD.WebhookClient({ url: process.env.WEBHOOK_LINK})
+const DISCORD_CLIENT = new DISCORD.Client({ intents: [] })
 
-const api = new VRChatAPI({});
+const VRC_API = new VRChatAPI({});
 main();
 
 
-// Instantiate WebSocket
 
 async function main() {
     try {
-        await api.login();
-        // console.log(`Logged in successfully as ${api.currentUser.displayName}!`);
-        // DiscordWebhook.send({ content: `Bot connecte` })
-
+        await VRC_API.login();
     } catch (error) {
         if (error instanceof RequestError) {
-            console.error(`Failed to login: ${error.message}`);
+            console.error(`VRC | Failed to login: ${error.message}`);
         } else {
-            console.error(`An unexpected error occurred: ${error}`);
+            console.error(`VRC | An unexpected error occurred: ${error}`);
         }
+        process.exit(1)
     }
-    let users = []
-    for await (user of api.currentUser.friends) {
-        users.push(await (await (api.userApi.getUserById({ userId: user }))).displayName)
-    }
-    // console.log(`Tracked : \n - ${users.join("\n - ")}`)
-    // DiscordWebhook.send({ content: `Amis du compte : \n \`\`\` - ${users.join("\n - ")}\`\`\`` })
+    process.env.TEST ? console.log(`VRCClient online ${VRC_API.currentUser.username}`) : null;
 
-    const ws = new VRCWebSocket({
-        vrchatAPI: api,
+    const VRC_WEBSOCKET = new VRCWebSocket({
+        vrchatAPI: VRC_API,
         eventsToListenTo: [EventType.Friend_Location, EventType.Friend_Offline, EventType.Friend_Online],
     });
+    process.env.TEST ? console.log(`VRCWebSocket OK`) : null;
 
-    ws.on(EventType.All, (data) => {
-        console.log(`------------------------------------------------`)
-        console.log(data)
-        console.log(`------------------------------------------------`)
+
+    DISCORD_CLIENT.login(process.env.DISCORD_TOKEN).then((c) => {
+        process.env.TEST ? console.log(`DiscordClient Online : ${DISCORD_CLIENT.user.displayName}`) : null;
     })
 
 
-    ws.on(EventType.Friend_Online, (data) => {
-        console.log(`------------------------------------------------`)
-        console.log(data)
-        try {
-            DiscordWebhook.send({ content: `${data.user.displayName} est connecte dans ${data.location}.` })
-        } catch (error) {
-
-        }
-
+    module.exports = { VRC_API, VRC_WEBSOCKET, DISCORD_CLIENT }
+    require("./discord/channelsSetup").setup.then(() => {
+        process.env.TrackingDisabled ? console.log(`Activity Tracking disabled by .env variables`) : require("./vrchat/tracking")
     })
 
-    ws.on(EventType.Friend_Offline, (data) => {
-        console.log(`------------------------------------------------`)
-        console.log(data)
-        try {
-            DiscordWebhook.send({ content: `${(api.userApi.getUserById({ userId: data.userId })).displayName} est deconnecte.` })
-        } catch (error) {
 
-        }
-    })
-
-    ws.on(EventType.Friend_Location, (data) => {
-        console.log(`------------------------------------------------`)
-        console.log(data)
-        try {
-            DiscordWebhook.send({ content: `${data.user.displayName} est maintenant dans le monde ${data.world?.name || "prive"}` })
-        } catch (error) {
-
-        }
-    })
 }
