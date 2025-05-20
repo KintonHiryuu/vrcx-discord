@@ -11,19 +11,23 @@
         "IOS": "IOS"
     },
     "region": {
+        "us": "🇺🇸",
         "usw": "🇺🇸w",
         "use": "🇺🇸e",
         "eu": "🇪🇺",
         "jp": "🇯🇵"
     },
     "InstanceType": {
-        "Publique": "Publique",
-        "FriendsPlus": "Friends+",
-        "Friends": "Friends",
+        "public": "Publique",
+        "hidden": "Friends+",
+        "friends": "Friends",
         "Invite": "Invite",
         "InvitePlus": "Invite+",
-        "GroupPublic": "Groupe Publique",
-        "GroupPlus": "Groupe+",
-        "Group": "Groupe prive"
+        "group": "Groupe",
+        "groupType":{
+            "members":"Prive",
+            "plus":"Plus",
+            "public":"Publique"
+        }
     }
 }

@@ -39,4 +39,5 @@ async function main() {
     })
 
 
+    VRC_WEBSOCKET.on("close", ()=>{process.exit(2)})
 }
