@@ -5,7 +5,7 @@ const DISCORD = require("discord.js")
 const emojis = require("../src/emojis.json")
 
 VRC_WEBSOCKET.on(EventType.All, (data) => {
-    if (process.env.TEST == true) {
+    if (process.env.TEST == "true") {
         console.log(`--------------------EVENTALL----------------------------`)
         console.log(data)
         console.log(`------------------------------------------------`)
@@ -15,7 +15,7 @@ VRC_WEBSOCKET.on(EventType.All, (data) => {
 
 
 VRC_WEBSOCKET.on(EventType.Friend_Online, (data) => {
-    if (process.env.TEST == true) {
+    if (process.env.TEST == "true") {
         console.log(`-----------------------EVENONLINE-------------------------`)
         console.log(data)
         console.log(`------------------------------------------------`)
@@ -29,7 +29,7 @@ VRC_WEBSOCKET.on(EventType.Friend_Online, (data) => {
             },
             {
                 "type": 10,
-                "content": `*Plateforme : ${emojis.platforme[data.platform] || data.platform}* | *Status : ${emojis.status[data.status] || data.status}*`
+                "content": `*Plateforme : ${emojis.platforme[data.platform] || data.platform}* | *Status : ${emojis.status[data.user.status] || data.user.status}*`
             },
             {
                 "type": 14,
@@ -39,14 +39,14 @@ VRC_WEBSOCKET.on(EventType.Friend_Online, (data) => {
 
         ]
         //envoyer image avatar ou profilePicOverride
-    }
-    )
+    })
+
 })
 
 VRC_WEBSOCKET.on(EventType.Friend_Offline, (data) => {
-    let user = VRC_API.userApi.getUserById({userId:data.userId})
-    
-    if (process.env.TEST == true) {
+    let user = VRC_API.userApi.getUserById({ userId: data.userId })
+
+    if (process.env.TEST == "true") {
         console.log(`--------------------EVENTOFFLINE----------------------------`)
         console.log(data)
         console.log(`--------------------OFFLINEUSERDATA----------------------------`)
@@ -76,13 +76,18 @@ VRC_WEBSOCKET.on(EventType.Friend_Offline, (data) => {
 })
 
 VRC_WEBSOCKET.on(EventType.Friend_Location, (data) => {
-    if (process.env.TEST == true) {
+    if (process.env.TEST == "true") {
         console.log(`--------------------EVENTLOCATION----------------------------`)
         console.log(data)
         console.log(`------------------------------------------------`)
     }
+    if(["","offline","traveling","traveling:traveling"].includes(data.location)){return}
+
+
+    let instanceDetails = require("../src/Parser").VRCInstances(data.location)
+
     discordActivityChannel.send({
-        "flags": 32768,
+        "flags": DISCORD.MessageFlags.IsComponentsV2,
         "components": [
             {
                 "type": 10,
@@ -94,17 +99,17 @@ VRC_WEBSOCKET.on(EventType.Friend_Location, (data) => {
             },//ajouter worldLink et update date
             {
                 "type": 10,
-                "content": `Instance : \`${data.location.split(":")[1].split("~").join("\` \`")}\`* (parsing en attente)`
+                "content": `Instance \`${instanceDetails.instanceID || private}\` : ${emojis.InstanceType[instanceDetails.type]} ${emojis.region[instanceDetails.region]}`
             },
             {
-                "type": 14,
-                "divider": true,
-                "spacing": 1
+                "type": 11,
+                "media": {
+                    "url": "https://websitewithopensourceimages/gamepreview.png"
+                }
             }
 
         ]
         //envoyer image monde
-    }
-    )
+    })
 
 })

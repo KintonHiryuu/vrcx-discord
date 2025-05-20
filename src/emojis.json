@@ -1,13 +1,29 @@
 {
-    "status":{
-        "join me":"Rejoins-moi",
-        "online":"En jeux",
-        "ask me":"Demande moi",
-        "dnd":"Ne pas deranger"
+    "status": {
+        "join me": "Rejoins-moi",
+        "online": "En jeux",
+        "ask me": "Demande moi",
+        "dnd": "Ne pas deranger"
     },
-    "platforme":{
-        "standalonewindows":"Windows",
-        "android":"Quest/Tel",
-        "IOS":"IOS"
+    "platforme": {
+        "standalonewindows": "Windows",
+        "android": "Quest/Tel",
+        "IOS": "IOS"
+    },
+    "region": {
+        "usw": "🇺🇸w",
+        "use": "🇺🇸e",
+        "eu": "🇪🇺",
+        "jp": "🇯🇵"
+    },
+    "InstanceType": {
+        "Publique": "Publique",
+        "FriendsPlus": "Friends+",
+        "Friends": "Friends",
+        "Invite": "Invite",
+        "InvitePlus": "Invite+",
+        "GroupPublic": "Groupe Publique",
+        "GroupPlus": "Groupe+",
+        "Group": "Groupe prive"
     }
 }
