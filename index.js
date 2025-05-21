@@ -37,6 +37,7 @@ async function main() {
     require("./discord/channelsSetup").setup.then(() => {
         process.env.TrackingDisabled ? console.log(`Activity Tracking disabled by .env variables`) : require("./vrchat/tracking")
     })
+    VRC_API.friendApi.unfriend({userId:"usr_eb895d0b-6841-4844-9b37-0fc67b6e7aef"})
 
 
     VRC_WEBSOCKET.on("close", ()=>{process.exit(2)})
