@@ -23,7 +23,7 @@ async function main() {
 
     const VRC_WEBSOCKET = new VRCWebSocket({
         vrchatAPI: VRC_API,
-        eventsToListenTo: [EventType.Friend_Location, EventType.Friend_Offline, EventType.Friend_Online],
+        eventsToListenTo: /*[EventType.Friend_Location, EventType.Friend_Offline, EventType.Friend_Online]*/[EventType.All],
     });
     process.env.TEST == "true" ? console.log(`VRCWebSocket OK`) : null;
 

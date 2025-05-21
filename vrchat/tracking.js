@@ -25,7 +25,7 @@ VRC_WEBSOCKET.on(EventType.Friend_Online, (data) => {
         "components": [
             {
                 "type": 10,
-                "content": `## ${data.user.displayName} est connecte`
+                "content": `## [${data.user.displayName}](https://vrchat.com/user/${data.user.id}) est connecte`
             },
             {
                 "type": 10,
@@ -48,7 +48,6 @@ VRC_WEBSOCKET.on(EventType.Friend_Online, (data) => {
             }
 
         ]
-        //envoyer image avatar ou profilePicOverride
     })
 
 })
@@ -99,8 +98,6 @@ VRC_WEBSOCKET.on(EventType.Friend_Location, (data) => {
 
     if (data.location == "private") { sendMessage(data, { "private": "private" }, { "private": "private" }); return }
     VRC_API.instanceApi.getInstance({ instanceId: data.location.split(":")[1], worldId: data.world.id }).then(instance => {
-        console.log(instance.type)
-        console.log(instance.ownerId)
         if (instance.type == "group") {
             VRC_API.groupApi.getGroupbyID({ groupId: instance.ownerId }).then(instanceOwner => {
                 sendMessage(data, instance, instanceOwner)
@@ -124,12 +121,13 @@ VRC_WEBSOCKET.on(EventType.Friend_Location, (data) => {
  * @returns {void}
  */
 function sendMessage(data, instance, instanceOwner) {
+    console.log(instanceOwner)
     discordActivityChannel.send({
         "flags": DISCORD.MessageFlags.IsComponentsV2,
         "components": [
             {
                 "type": 10,
-                "content": `## ${data.user.displayName} entre dans ${data?.world?.name ? `le monde ${data.world.name}` : `un monde prive`}`
+                "content": `## ${data.user.displayName}](https://vrchat.com/user/${data.user.id}) entre dans ${data?.world?.name ? `le monde ${data.world.name}` : `un monde prive`}`
             },
             {
                 "type": 10,
@@ -137,7 +135,7 @@ function sendMessage(data, instance, instanceOwner) {
             },
             {
                 "type": 10,
-                "content": `Instance \`${instance.name || "private"}\` : ${emojis.region[instance.region] || "private"} ${emojis.InstanceType[instance.type] || instance.type || "private"} ${instance.groupAccessType ? emojis.InstanceType.groupType[instance.groupAccessType] || instance.groupAccessType : ""} - [${instanceOwner.displayName || instanceOwner.name || "private"}](https://vrchat.com/home/${instanceOwner.displayName ? "user" : "group"}${instanceOwner.Id})\n${instance.n_users || "private"}${instance.queueEnabled ? `+${instance.queueSize}` : ""}/${instance.capacity || "private"} (${instance.userCount || "private"}) | Age verifie : \`${instance.ageGate ? "Oui" : "Non"}\` | Lien : [vrchat.com](https://vrchat.com/home/launch?worldId=${instance.world.id}&${instance.instanceId})`
+                "content": `Instance \`${instance.name || "private"}\` : ${emojis.region[instance.region] || "private"} ${emojis.InstanceType[instance.type] || instance.type || "private"} ${instance.groupAccessType ? emojis.InstanceType.groupType[instance.groupAccessType] || instance.groupAccessType : ""} - [${instanceOwner.displayName || instanceOwner.name || "private"}](https://vrchat.com/home/${instanceOwner.displayName ? "user" : "group"}/${instanceOwner.id})\n${instance.n_users || "private"}${instance.queueEnabled ? `+${instance.queueSize}` : ""}/${instance.capacity || "private"} (${instance.userCount || "private"}) | Age verifie : \`${instance.ageGate ? "Oui" : "Non"}\` | Lien de la map : [vrchat.com](https://vrchat.com/home/world/${instance.world.id}/info)`
             },
             {
                 "type": 12,
@@ -161,3 +159,50 @@ function sendMessage(data, instance, instanceOwner) {
         ]
     })
 }
+
+VRC_WEBSOCKET.on(EventType.Friend_Update, (data) => {
+    if (process.env.TEST == "true") {
+        console.error("update")
+        console.log(data)
+        console.error("fin update)")
+    }
+})
+
+VRC_WEBSOCKET.on(EventType.Friend_Request, (data) => {
+    discordActivityChannel.send({
+        "flags": 32768,
+        "components": [
+            {
+                "type": 10,
+                "content": `## Nouvelle demande d'amis : [${data.senderUsername}](https://vrchat.com/user/${data.senderUserId})`
+            },
+            {
+                "type": 14,
+                "divider": true,
+                "spacing": 1
+            }
+
+        ]
+    })
+    VRC_API.friendApi.sendFriendRequest({ userId: data.senderUserId }).then(r => { console.log(r) })
+})
+
+
+VRC_WEBSOCKET.on(EventType.Friend_Add, (data) => {
+    discordActivityChannel.send({
+        "flags": 32768,
+        "components": [
+            {
+                "type": 10,
+                "content": `## Nouvelle personne trackee : [${data.senderUsername}](https://vrchat.com/user/${data.senderUserId}) - ajouter les informations de la personne`
+            },
+            {
+                "type": 14,
+                "divider": true,
+                "spacing": 1
+            }
+
+        ]
+    })
+
+})
