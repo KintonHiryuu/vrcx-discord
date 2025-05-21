@@ -54,39 +54,42 @@ VRC_WEBSOCKET.on(EventType.Friend_Online, (data) => {
 })
 
 VRC_WEBSOCKET.on(EventType.Friend_Offline, (data) => {
-    let user = VRC_API.userApi.getUserById({ userId: data.userId })
-
-    if (process.env.TEST == "true") {
-        console.log(`--------------------EVENTOFFLINE----------------------------`)
-        console.log(data)
-        console.log(`--------------------OFFLINEUSERDATA----------------------------`)
-        console.log(user)
-        console.log(`------------------------------------------------`)
-    }
+    VRC_API.userApi.getUserById({ userId: data.userId }).then(user => {
 
 
+        if (process.env.TEST == "true") {
+            console.log(`--------------------EVENTOFFLINE----------------------------`)
+            console.log(data)
+            console.log(`--------------------OFFLINEUSERDATA----------------------------`)
+            console.log(user)
+            console.log(`------------------------------------------------`)
+        }
 
-    discordActivityChannel.send({
-        "flags": 32768,
-        "components": [
-            {
-                "type": 10,
-                "content": `## ${user.displayName} est deconnecte`
-            },
-            {
-                "type": 14,
-                "divider": true,
-                "spacing": 1
-            }
 
-        ]
-        //envoyer image avatar ou profilePicOverride
-    }
-    )
+
+        discordActivityChannel.send({
+            "flags": 32768,
+            "components": [
+                {
+                    "type": 10,
+                    "content": `## ${user.displayName} est deconnecte`
+                },
+                {
+                    "type": 14,
+                    "divider": true,
+                    "spacing": 1
+                }
+
+            ]
+            //envoyer image avatar ou profilePicOverride
+        })
+    })
 })
 
 VRC_WEBSOCKET.on(EventType.Friend_Location, (data) => {
-    if (["", "offline", "traveling", "traveling:traveling"].includes(data.location)) { return }
+    if (["", /*"offline",*/ "traveling", "traveling:traveling"].includes(data.location)) { return }
+
+    if (data.location == "offline") { console.log(`${data.user.displayName} WAITING OFFLINE`) }
 
     if (process.env.TEST == "true") {
         console.log(`--------------------EVENTLOCATION----------------------------`)
@@ -94,7 +97,7 @@ VRC_WEBSOCKET.on(EventType.Friend_Location, (data) => {
         console.log(`------------------------------------------------`)
     }
 
-    if(data.location == "private") {sendMessage(data,{"private":"private"},{"private":"private"});return}
+    if (data.location == "private") { sendMessage(data, { "private": "private" }, { "private": "private" }); return }
     VRC_API.instanceApi.getInstance({ instanceId: data.location.split(":")[1], worldId: data.world.id }).then(instance => {
         console.log(instance.type)
         console.log(instance.ownerId)
@@ -126,7 +129,7 @@ function sendMessage(data, instance, instanceOwner) {
         "components": [
             {
                 "type": 10,
-                "content": `## ${data.user.displayName} entre dans ${data?.world?.name ? `le monde ${data.world.name}`:`un monde prive`}`
+                "content": `## ${data.user.displayName} entre dans ${data?.world?.name ? `le monde ${data.world.name}` : `un monde prive`}`
             },
             {
                 "type": 10,
@@ -134,7 +137,7 @@ function sendMessage(data, instance, instanceOwner) {
             },
             {
                 "type": 10,
-                "content": `Instance \`${instance.name || "private"}\` : ${emojis.region[instance.region]|| "private"} ${emojis.InstanceType[instance.type] || instance.type || "private"} ${instance.groupAccessType ? emojis.InstanceType.groupType[instance.groupAccessType] || instance.groupAccessType : ""} - [${instanceOwner.displayName || instanceOwner.name || "private"}](https://vrchat.com/home/${instanceOwner.displayName?"user":"group"}${instanceOwner.Id})\n${instance.n_users || "private"}${instance.queueEnabled ? `+${instance.queueSize}` : ""}/${instance.capacity || "private"} (${instance.userCount || "private"}) | Age verifie : \`${instance.ageGate ? "Oui" : "Non"}\` | Lien : [vrchat.com](https://vrchat.com/home/launch?worldId=${instance.world.id}&${instance.instanceId})`
+                "content": `Instance \`${instance.name || "private"}\` : ${emojis.region[instance.region] || "private"} ${emojis.InstanceType[instance.type] || instance.type || "private"} ${instance.groupAccessType ? emojis.InstanceType.groupType[instance.groupAccessType] || instance.groupAccessType : ""} - [${instanceOwner.displayName || instanceOwner.name || "private"}](https://vrchat.com/home/${instanceOwner.displayName ? "user" : "group"}${instanceOwner.Id})\n${instance.n_users || "private"}${instance.queueEnabled ? `+${instance.queueSize}` : ""}/${instance.capacity || "private"} (${instance.userCount || "private"}) | Age verifie : \`${instance.ageGate ? "Oui" : "Non"}\` | Lien : [vrchat.com](https://vrchat.com/home/launch?worldId=${instance.world.id}&${instance.instanceId})`
             },
             {
                 "type": 12,
@@ -148,6 +151,11 @@ function sendMessage(data, instance, instanceOwner) {
                         }
                     }
                 ]
+            },
+            {
+                "type": 14,
+                "divider": true,
+                "spacing": 1
             }
 
         ]
