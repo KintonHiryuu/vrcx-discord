@@ -82,7 +82,7 @@ VRC_WEBSOCKET.on(EventType.Friend_Offline, (data) => {
             "components": [
                 {
                     "type": 10,
-                    "content": `## [${data.user.displayName}](https://vrchat.com/user/${data.user.id}) est deconnecte`
+                    "content": `## [${data.user?.displayName || user.displayName}](https://vrchat.com/user/${data.user.id}) est deconnecte`
                 },
                 {
                     "type": 14,
@@ -138,7 +138,7 @@ function sendMessage(data, instance, instanceOwner) {
         "components": [
             {
                 "type": 10,
-                "content": `## ${data.user.displayName}](https://vrchat.com/user/${data.user.id}) entre dans ${data?.world?.name ? `le monde ${data.world.name}` : `un monde prive`}`
+                "content": `## [${data.user.displayName}](https://vrchat.com/user/${data.user.id}) entre dans ${data?.world?.name ? `le monde ${data.world.name}` : `un monde prive`}`
             },
             {
                 "type": 10,
@@ -220,6 +220,6 @@ VRC_WEBSOCKET.on(EventType.Friend_Add, (data) => {
     }
     message.components.push(require("../src/messages_schemas").VRCUserInfos_DiscordEmbed(data))
     console.log(message)
-    discordActivityChannel.send(message)
+    discordActivityChannel.send(message.components[2].components)
 
 })
