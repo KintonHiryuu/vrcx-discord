@@ -4,6 +4,17 @@ const { discordActivityChannel } = require("../discord/channelsSetup")
 const DISCORD = require("discord.js")
 const emojis = require("../src/emojis.json")
 
+
+// Rattrapage des notifs en attente
+//notifs types = friendRequest┃invite┃inviteResponse┃message┃requestInvite┃requestInviteResponse┃votetokick
+//Demandes d'amis
+VRC_API.notificationApi.listNotifications({ type: 'friendRequest' }).then(notifs => {
+    for (requests of notifs) {
+        processFriendRequest(requests)
+    }
+})
+
+
 VRC_WEBSOCKET.on(EventType.All, (data) => {
     if (process.env.TEST == "true") {
         console.log(`--------------------EVENTALL----------------------------`)
@@ -71,7 +82,7 @@ VRC_WEBSOCKET.on(EventType.Friend_Offline, (data) => {
             "components": [
                 {
                     "type": 10,
-                    "content": `## ${user.displayName} est deconnecte`
+                    "content": `## [${data.user?.displayName || user.displayName}](https://vrchat.com/user/${data.user.id}) est deconnecte`
                 },
                 {
                     "type": 14,
@@ -127,7 +138,7 @@ function sendMessage(data, instance, instanceOwner) {
         "components": [
             {
                 "type": 10,
-                "content": `## ${data.user.displayName}](https://vrchat.com/user/${data.user.id}) entre dans ${data?.world?.name ? `le monde ${data.world.name}` : `un monde prive`}`
+                "content": `## [${data.user.displayName}](https://vrchat.com/user/${data.user.id}) entre dans ${data?.world?.name ? `le monde ${data.world.name}` : `un monde prive`}`
             },
             {
                 "type": 10,
@@ -169,6 +180,9 @@ VRC_WEBSOCKET.on(EventType.Friend_Update, (data) => {
 })
 
 VRC_WEBSOCKET.on(EventType.Friend_Request, (data) => {
+    processFriendRequest(data)
+});
+let processFriendRequest = (data) => {
     discordActivityChannel.send({
         "flags": 32768,
         "components": [
@@ -185,24 +199,27 @@ VRC_WEBSOCKET.on(EventType.Friend_Request, (data) => {
         ]
     })
     VRC_API.friendApi.sendFriendRequest({ userId: data.senderUserId }).then(r => { console.log(r) })
-})
+}
 
 
 VRC_WEBSOCKET.on(EventType.Friend_Add, (data) => {
-    discordActivityChannel.send({
+    // console.log(data)
+    let message = {
         "flags": 32768,
         "components": [
             {
                 "type": 10,
-                "content": `## Nouvelle personne trackee : [${data.senderUsername}](https://vrchat.com/user/${data.senderUserId}) - ajouter les informations de la personne`
+                "content": `## Nouvelle personne trackee : [${data.user.displayName}](https://vrchat.com/user/${data.user.id})`
             },
             {
                 "type": 14,
                 "divider": true,
                 "spacing": 1
             }
-
         ]
-    })
+    }
+    message.components.push(require("../src/messages_schemas").VRCUserInfos_DiscordEmbed(data))
+    console.log(message)
+    discordActivityChannel.send(message.components[2].components)
 
 })
