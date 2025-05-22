@@ -29,5 +29,8 @@
             "plus":"Plus",
             "public":"Publique"
         }
+    },
+    "tags":{
+        "system_trust_basic":"Trusted"
     }
 }

@@ -219,7 +219,6 @@ VRC_WEBSOCKET.on(EventType.Friend_Add, (data) => {
         ]
     }
     message.components.push(require("../src/messages_schemas").VRCUserInfos_DiscordEmbed(data))
-    console.log(message)
-    discordActivityChannel.send(message.components[2].components)
+    discordActivityChannel.send(message)
 
 })

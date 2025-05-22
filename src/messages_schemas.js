@@ -16,7 +16,7 @@ module.exports.VRCUserInfos_DiscordEmbed = (userData) => {
             },
             {
                 "type": 10,
-                "content": `\`\`\`${userData.user.bio}\`\`\``
+                "content": `\`\`\`${userData.user.bio}\`\`\`....`
             },
             {
                 "type": 10,
@@ -28,7 +28,7 @@ module.exports.VRCUserInfos_DiscordEmbed = (userData) => {
             },
             {
                 "type": 10,
-                "content": `\`\`\`\n - ${userData.user.tags.map(s => emojis?.tags[s] || s).join("\n - ")}\`\`\`` // mettre les tags avec si disponnible des emojis.tags.users pour l'affichage
+                "content": `\`\`\`\n - ${userData.user.tags.map(s => emojis.tags[s] || `${s}`).join("\n - ")}\`\`\`......` // mettre les tags avec si disponnible des emojis.tags.users pour l'affichage
             },
             // {
             //     "type": 12,
