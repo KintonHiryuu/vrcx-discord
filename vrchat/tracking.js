@@ -3,6 +3,7 @@ const { VRC_WEBSOCKET, VRC_API } = require("../index")
 const { discordActivityChannel } = require("../discord/channelsSetup")
 const DISCORD = require("discord.js")
 const emojis = require("../src/emojis.json")
+const messageSchemas = require("../src/messages_schemas")
 
 
 // Rattrapage des notifs en attente
@@ -12,16 +13,6 @@ VRC_API.notificationApi.listNotifications({ type: 'friendRequest' }).then(notifs
     for (requests of notifs) {
         processFriendRequest(requests)
     }
-})
-
-
-VRC_WEBSOCKET.on(EventType.All, (data) => {
-    if (process.env.TEST == "true") {
-        console.log(`--------------------EVENTALL----------------------------`)
-        console.log(data)
-        console.log(`------------------------------------------------`)
-    }
-
 })
 
 
@@ -66,6 +57,7 @@ VRC_WEBSOCKET.on(EventType.Friend_Online, (data) => {
 VRC_WEBSOCKET.on(EventType.Friend_Offline, (data) => {
     VRC_API.userApi.getUserById({ userId: data.userId }).then(user => {
 
+        if (!user) return;
 
         if (process.env.TEST == "true") {
             console.log(`--------------------EVENTOFFLINE----------------------------`)
@@ -82,7 +74,7 @@ VRC_WEBSOCKET.on(EventType.Friend_Offline, (data) => {
             "components": [
                 {
                     "type": 10,
-                    "content": `## [${data.user?.displayName || user.displayName}](https://vrchat.com/user/${data.user.id}) est deconnecte`
+                    "content": `## [${user.displayName}](https://vrchat.com/user/${data?.user?.id || user.id}) est deconnecte`
                 },
                 {
                     "type": 14,
@@ -132,7 +124,6 @@ VRC_WEBSOCKET.on(EventType.Friend_Location, (data) => {
  * @returns {void}
  */
 function sendMessage(data, instance, instanceOwner) {
-    console.log(instanceOwner)
     discordActivityChannel.send({
         "flags": DISCORD.MessageFlags.IsComponentsV2,
         "components": [
@@ -172,11 +163,18 @@ function sendMessage(data, instance, instanceOwner) {
 }
 
 VRC_WEBSOCKET.on(EventType.Friend_Update, (data) => {
-    if (process.env.TEST == "true") {
-        console.error("update")
-        console.log(data)
-        console.error("fin update)")
+    let message = {
+        "flags": 32768,
+        "components": [
+            {
+                "type": 10,
+                "content": `## [${data.user.displayName}](https://vrchat.com/user/${data.user.id}) as mis a jour son profil :`
+            }
+        ]
     }
+    message.components.push(messageSchemas.VRCUserInfos_DiscordEmbed(data))
+    message.components.push({ "type": 14, "divider": true, "spacing": 1 })
+    discordActivityChannel.send(message)
 })
 
 VRC_WEBSOCKET.on(EventType.Friend_Request, (data) => {
@@ -203,7 +201,6 @@ let processFriendRequest = (data) => {
 
 
 VRC_WEBSOCKET.on(EventType.Friend_Add, (data) => {
-    // console.log(data)
     let message = {
         "flags": 32768,
         "components": [
@@ -218,7 +215,32 @@ VRC_WEBSOCKET.on(EventType.Friend_Add, (data) => {
             }
         ]
     }
-    message.components.push(require("../src/messages_schemas").VRCUserInfos_DiscordEmbed(data))
+    message.components.push(messageSchemas.VRCUserInfos_DiscordEmbed(data))
     discordActivityChannel.send(message)
 
 })
+
+
+VRC_WEBSOCKET.on(EventType.Friend_Delete, (data) => {
+    VRC_API.userApi.getUserById({ userId: data.userId }).then(user => {
+        if (!user) return;
+        discordActivityChannel.send({
+            "flags": 32768,
+            "components": [
+                {
+                    "type": 10,
+                    "content": `## Arret du tracking de [${user.displayName}](https://vrchat.com/user/${data?.user?.id || user.id})`
+                },
+                {
+                    "type": 14,
+                    "divider": true,
+                    "spacing": 1
+                }
+
+            ]
+            //envoyer image avatar ou profilePicOverride
+        })
+    })
+})
+
+// VRC_WEBSOCKET.on(EventType.Group_Announcement)

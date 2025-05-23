@@ -24,13 +24,24 @@
         "Invite": "Invite",
         "InvitePlus": "Invite+",
         "group": "Groupe",
-        "groupType":{
-            "members":"Prive",
-            "plus":"Plus",
-            "public":"Publique"
+        "groupType": {
+            "members": "Prive",
+            "plus": "Plus",
+            "public": "Publique"
         }
     },
-    "tags":{
-        "system_trust_basic":"Trusted"
+    "tags": {
+        "system_trust_basic": "Rang : Nouvel Utilisateur",
+        "system_avatar_access": "Droit d'upload d'avatars",
+        "system_world_access": "Droit d'upload de mondes",
+        "system_feedback_access": "Droit d'envoyer des feedbacks",
+        "system_trust_known": "Rang : Utilisateur",
+        "system_trust_trusted": "Rang : Utilisateur Connu (known)",
+        "system_trust_veteran": "Rang : Utilisateur Fidel (trusted)",
+        "show_social_rank": "show_social_rank (inutile)",
+        "system_early_adopter": "As acheter VRC+ avant Decembre 2020",
+        "language_eng": "Langue : Anglais",
+        "language_fsl": "Langue : LSF (Langue des Signes Francais)",
+        "language_fra": "Langue : Francais"
     }
 }
