@@ -15,7 +15,6 @@ VRC_API.notificationApi.listNotifications({ type: 'friendRequest' }).then(notifs
     }
 })
 
-
 VRC_WEBSOCKET.on(EventType.Friend_Online, (data) => {
     if (process.env.TEST == "true") {
         console.log(`-----------------------EVENONLINE-------------------------`)

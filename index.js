@@ -35,12 +35,9 @@ async function main() {
 
     module.exports = { VRC_API, VRC_WEBSOCKET, DISCORD_CLIENT }
     require("./discord/channelsSetup").setup.then(() => {
-        process.env.TrackingDisabled ? console.log(`Activity Tracking disabled by .env variables`) : require("./vrchat/tracking")
+        process.env.TrackingDisabled ? console.log(`Activity Tracking disabled by .env variables`) : require("./vrchat/userTracking")
+        require("./vrchat/groupTracking")
     })
-
-    if(process.env.TEST == "true"){
-    VRC_API.friendApi.unfriend({userId:"usr_eb895d0b-6841-4844-9b37-0fc67b6e7aef"})
-}
 
     VRC_WEBSOCKET.on("close", ()=>{process.exit(2)})
 }
