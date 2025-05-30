@@ -4,7 +4,7 @@ const { discordGroupChannel } = require("../discord/channelsSetup")
 
 VRC_API.notificationApi.listNotifications({type:"group.announcement"}).then(notif => console.log(notif))
 
-
+discordGroupChannel.send({content:"rdy"})
 
 VRC_WEBSOCKET.on(EventType.Group_Invite, (data) => {
     console.log(`GROUP INVITE | ${data.data.groupName} - invite par ${data.data.managerUserDisplayName}`)

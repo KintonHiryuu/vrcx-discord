@@ -34,7 +34,8 @@ async function main() {
 
 
     module.exports = { VRC_API, VRC_WEBSOCKET, DISCORD_CLIENT }
-    require("./discord/channelsSetup").setup.then(() => {
+    require("./discord/channelsSetup").setup.then((r) => {
+        if(r){console.error(r);console.error("Could not setup discord channels, shutting down....");process.exit(1);return}
         process.env.TrackingDisabled ? console.log(`Activity Tracking disabled by .env variables`) : require("./vrchat/userTracking")
         require("./vrchat/groupTracking")
     })

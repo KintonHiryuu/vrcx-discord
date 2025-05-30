@@ -5,7 +5,7 @@ const DISCORD = require("discord.js")
 const emojis = require("../src/emojis.json")
 const messageSchemas = require("../src/messages_schemas")
 
-
+discordActivityChannel.send({content:"rdy"})
 // Rattrapage des notifs en attente
 //notifs types = friendRequest┃invite┃inviteResponse┃message┃requestInvite┃requestInviteResponse┃votetokick
 //Demandes d'amis
