@@ -25,7 +25,7 @@ VRC_WEBSOCKET.on(EventType.Friend_Online, (data) => {
         "components": [
             {
                 "type": 10,
-                "content": `## [${data.user.displayName}](https://vrchat.com/user/${data.user.id}) est connecte`
+                "content": `## [${data.user.displayName}](https://vrchat.com/home/user/${data.user.id}) est connecte`
             },
             {
                 "type": 10,
@@ -72,7 +72,7 @@ VRC_WEBSOCKET.on(EventType.Friend_Offline, (data) => {
             "components": [
                 {
                     "type": 10,
-                    "content": `## [${user.displayName}](https://vrchat.com/user/${data?.user?.id || user.id}) est deconnecte`
+                    "content": `## [${user.displayName}](https://vrchat.com/home/user/${data?.user?.id || user.id}) est deconnecte`
                 },
                 {
                     "type": 14,
@@ -127,7 +127,7 @@ function sendMessage(data, instance, instanceOwner) {
         "components": [
             {
                 "type": 10,
-                "content": `## [${data.user.displayName}](https://vrchat.com/user/${data.user.id}) entre dans ${data?.world?.name ? `le monde ${data.world.name}` : `un monde prive`}`
+                "content": `## [${data.user.displayName}](https://vrchat.com/home/user/${data.user.id}) entre dans ${data?.world?.name ? `le monde ${data.world.name}` : `un monde prive`}`
             },
             {
                 "type": 10,
@@ -166,7 +166,7 @@ VRC_WEBSOCKET.on(EventType.Friend_Update, (data) => {
         "components": [
             {
                 "type": 10,
-                "content": `## [${data.user.displayName}](https://vrchat.com/user/${data.user.id}) as mis a jour son profil :`
+                "content": `## [${data.user.displayName}](https://vrchat.com/home/user/${data.user.id}) as mis a jour son profil :`
             }
         ]
     }
@@ -184,7 +184,7 @@ let processFriendRequest = (data) => {
         "components": [
             {
                 "type": 10,
-                "content": `## Nouvelle demande d'amis : [${data.senderUsername}](https://vrchat.com/user/${data.senderUserId})`
+                "content": `## Nouvelle demande d'amis : [${data.senderUsername}](https://vrchat.com/home/user/${data.senderUserId})`
             },
             {
                 "type": 14,
@@ -204,7 +204,7 @@ VRC_WEBSOCKET.on(EventType.Friend_Add, (data) => {
         "components": [
             {
                 "type": 10,
-                "content": `## Nouvelle personne trackee : [${data.user.displayName}](https://vrchat.com/user/${data.user.id})`
+                "content": `## Nouvelle personne trackee : [${data.user.displayName}](https://vrchat.com/home/user/${data.user.id})`
             },
             {
                 "type": 14,
@@ -227,7 +227,7 @@ VRC_WEBSOCKET.on(EventType.Friend_Delete, (data) => {
             "components": [
                 {
                     "type": 10,
-                    "content": `## Arret du tracking de [${user.displayName}](https://vrchat.com/user/${data?.user?.id || user.id})`
+                    "content": `## Arret du tracking de [${user.displayName}](https://vrchat.com/home/user/${data?.user?.id || user.id})`
                 },
                 {
                     "type": 14,

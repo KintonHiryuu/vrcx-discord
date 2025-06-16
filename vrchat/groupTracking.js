@@ -30,12 +30,13 @@ VRC_WEBSOCKET.on(EventType.Group_Invite, (data) => {
 
 
 VRC_WEBSOCKET.on(EventType.Group_Announcement, (data) => {
+    console.log(data)
     discordGroupChannel.send({
         "flags": 32768,
         "components": [
             {
                 "type": 10,
-                "content": `## Annonce de [${data.data.groupName}](https://vrchat.com/home/group/${data.groupId})`
+                "content": `## Annonce de [${data.data.groupName}](https://vrchat.com/home/group/${data.data.groupId})`
             }, {
                 "type": 17,
                 "accent_color": 703487,
