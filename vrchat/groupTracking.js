@@ -30,7 +30,6 @@ VRC_WEBSOCKET.on(EventType.Group_Invite, (data) => {
 
 
 VRC_WEBSOCKET.on(EventType.Group_Announcement, (data) => {
-    console.log(data)
     discordGroupChannel.send({
         "flags": 32768,
         "components": [
